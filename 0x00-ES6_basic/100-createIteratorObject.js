@@ -2,10 +2,10 @@
 export default function createIteratorObject(report) {
   let allEmployees = [];
   for (const department in report.allEmployees) {
-    if (report.allEmployees.hasOwnProperty(department)) {
+    if (Object.prototype.hasOwnProperty.call(report.allEmployees, department)) {
       allEmployees = [...allEmployees, ...report.allEmployees[department]];
     }
   }
-  
+
   return allEmployees[Symbol.iterator]();
 }
