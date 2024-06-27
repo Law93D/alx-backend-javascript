@@ -1,4 +1,3 @@
-// Define HolbertonClass before using it
 export class HolbertonClass {
   constructor(year, location) {
     this._year = year;
