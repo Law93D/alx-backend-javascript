@@ -1,13 +1,17 @@
 // 8-clean_set.js
+
 export default function cleanSet(set, startString) {
-  if (startString === '') return '';
+  if (typeof startString !== 'string' || startString.length === 0) {
+    return '';
+  }
 
   const result = [];
-  set.forEach((value) => {
+
+  for (const value of set) {
     if (value.startsWith(startString)) {
       result.push(value.slice(startString.length));
     }
-  });
+  }
 
   return result.join('-');
 }
