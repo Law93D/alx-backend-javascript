@@ -8,16 +8,22 @@ function countStudents(path) {
     try {
         const data = fs.readFileSync(path, 'utf8');
         const lines = data.trim().split('\n');
-        if (lines.length === 0 || lines[0].split(',').length < 3) throw new Error();
-        const students = lines.slice(1);
+
+        if (lines.length < 2) {
+            throw new Error('File has no data or is improperly formatted');
+        }
+
+        const students = lines.slice(1); // Exclude header line
         const fields = {};
 
         students.forEach((student) => {
             const [name, age, field] = student.split(',');
-            if (!fields[field]) {
-                fields[field] = [];
+            if (field) {
+                if (!fields[field]) {
+                    fields[field] = [];
+                }
+                fields[field].push(name);
             }
-            fields[field].push(name);
         });
 
         console.log(`Number of students: ${students.length}`);
@@ -27,7 +33,7 @@ function countStudents(path) {
             }
         }
     } catch (err) {
-        throw new Error('Cannot load the database');
+        console.error('Cannot load the database');
     }
 }
 

@@ -1,0 +1,22 @@
+{
+  "name": "full_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "utilis.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec babel-node --presets @babel/preset-env ./server.js ./database.csv"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.8",
+    "@babel/node": "^7.25.0",
+    "@babel/preset-env": "^7.25.3",
+    "nodemon": "^3.1.4"
+  }
+}
