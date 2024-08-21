@@ -1,26 +1,49 @@
-const fs = require('fs').promises;
+import fs from 'fs';
 
 /**
- * Reads the database file asynchronously and returns student names by field.
- * @param {string} path - The path to the database file.
- * @returns {Promise<Object>} - A promise that resolves with an object containing fields and student names.
+ * Reads the data of students, in a CSV data file.
+ * @param {String} dataPath The path to the CSV data file.
+ * @author Bezaleel Olakunori <https://github.com/B3zaleel>
+ * @returns {Promise<{.
+ *   String: {firstname: String, lastname: String, age: number}[]
+ * }>}
  */
-async function readDatabase(path) {
-    try {
-        const data = await fs.readFile(path, 'utf8');
-        const lines = data.trim().split('\n');
-        const fields = {};
+const readDatabase = (dataPath) => new Promise((resolve, reject) => {
+  if (!dataPath) {
+    reject(new Error('Cannot load the database'));
+  }
+  if (dataPath) {
+    fs.readFile(dataPath, (err, data) => {
+      if (err) {
+        reject(new Error('Cannot load the database'));
+      }
+      if (data) {
+        const fileLines = data
+          .toString('utf-8')
+          .trim()
+          .split('\n');
+        const studentGroups = {};
+        const dbFieldNames = fileLines[0].split(',');
+        const studentPropNames = dbFieldNames
+          .slice(0, dbFieldNames.length - 1);
 
-        lines.slice(1).forEach((line) => {
-            const [name, , field] = line.split(',');
-            if (!fields[field]) fields[field] = [];
-            fields[field].push(name);
-        });
+        for (const line of fileLines.slice(1)) {
+          const studentRecord = line.split(',');
+          const studentPropValues = studentRecord
+            .slice(0, studentRecord.length - 1);
+          const field = studentRecord[studentRecord.length - 1];
+          if (!Object.keys(studentGroups).includes(field)) {
+            studentGroups[field] = [];
+          }
+          const studentEntries = studentPropNames
+            .map((propName, idx) => [propName, studentPropValues[idx]]);
+          studentGroups[field].push(Object.fromEntries(studentEntries));
+        }
+        resolve(studentGroups);
+      }
+    });
+  }
+});
 
-        return fields;
-    } catch (error) {
-        throw new Error('Cannot load the database');
-    }
-}
-
+export default readDatabase;
 module.exports = readDatabase;
